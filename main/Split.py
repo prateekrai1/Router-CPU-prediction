@@ -10,13 +10,13 @@ for log in logs:
     cpu_usage = int(log.split("CPU USAGE:")[1].split("%")[0])
     data.append([timestamp, cpu_usage])
 
-df = pd.DataFrame(data, columns=["Timestamp", "CPU Usage"])
+df = pd.DataFrame(data, columns=["timestamp", "cpu_usage"])
 
 df["timestamp"] = pd.to_datetime(df["timestamp"])
 df = df.sort_values(by ="timestamp")
 
 df = df.sort_values(by = "timestamp")
-df["cpu_usage"] = df["cpu_usage"]/100.0
+df["cpu_usage"] = df["cpu_usage"]
 print(df.head())
 
 train_df, test_df = train_test_split(df, test_size=0.2, shuffle=False)
