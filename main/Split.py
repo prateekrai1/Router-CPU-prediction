@@ -17,7 +17,6 @@ df = df.sort_values(by ="timestamp")
 
 df = df.sort_values(by = "timestamp")
 df["cpu_usage"] = df["cpu_usage"]
-print(df.head())
 
 train_df, test_df = train_test_split(df, test_size=0.2, shuffle=False)
 train_df.to_csv("train.csv", index=False)
