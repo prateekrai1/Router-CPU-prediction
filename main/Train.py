@@ -6,8 +6,8 @@ from tensorflow.python.keras.models import Sequential
 from tensorflow.python.keras.layers import SimpleRNN, Dense, Dropout
 from tensorflow.keras.optimizers import Adam
 
-train_df = pd.read_csv(r"E:\data\train.csv", parse_dates=['timestamp'], index_col='timestamp')
-test_df = pd.read_csv(r"E:\data\train.csv", parse_dates=['timestamp'], index_col='timestamp')
+train_df = pd.read_csv(r"E:\Router CPU prediction\data\train.csv", parse_dates=['timestamp'], index_col='timestamp')
+test_df = pd.read_csv(r"E:\Router CPU prediction\data\test.csv", parse_dates=['timestamp'], index_col='timestamp')
 
 scaler = MinMaxScaler(feature_range=(0, 1))
 train_scaled = scaler.fit_transform(train_df)
