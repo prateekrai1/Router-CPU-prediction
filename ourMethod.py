@@ -28,9 +28,9 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Data loading and preprocessing
 # data = pd.read_csv('output.csv')
-data = pd.read_csv('./merged_cpu_bandwidth.csv')
-data['CPU Usage'] = data['CPU Usage'].replace('%', '', regex=True)
-data['CPU Usage'] = pd.to_numeric(data['CPU Usage'], errors='coerce')
+data = pd.read_csv('./merged_log.csv')
+data['CPU_Usage'] = data['CPU_Usage'].replace('%', '', regex=True)
+data['CPU_Usage'] = pd.to_numeric(data['CPU_Usage'], errors='coerce')
 
 # Handle missing values in numeric columns by replacing them with the mean
 numeric_columns = data.select_dtypes(include=['number']).columns
@@ -41,7 +41,7 @@ datetime_columns = data.select_dtypes(include=['datetime']).columns
 for col in datetime_columns:
     data[col] = pd.to_datetime(data[col], errors='coerce')  # Convert to datetime and handle errors
     data[col].fillna(data[col].mode()[0], inplace=True)  # Fill missing with the mode (most frequent value)
-selected_features = ['CPU Usage', 'Used Memory (KB)', 'TCP Count', 'UDP Count', 'Bandwidth (bps)']
+selected_features = ['TCP_Count','TX_Rate','RX_Rate']
 scaler = MinMaxScaler(feature_range=(0, 1))
 
 
@@ -145,13 +145,15 @@ actual_cpu_usage = y_test.cpu().numpy()
 
 
 predicted_cpu_usage = np.array(predicted_cpu_usage).reshape(-1, 1)
-dummy_array = np.zeros((predicted_cpu_usage.shape[0], 4))  # Creating dummy array for features
+dummy_array = np.zeros((predicted_cpu_usage.shape[0], 2))  # Creating dummy array for features
 full_input = np.hstack((predicted_cpu_usage, dummy_array))  # Combine predicted CPU usage with dummy array
 predicted_cpu_usage = scaler.inverse_transform(full_input)[:, 0]  # Inverse transform and extract CPU Usage
 
 actual_cpu_usage = actual_cpu_usage.reshape(-1, 1)  # Ensure actual CPU usage is 2D
 full_input_actual = np.hstack((actual_cpu_usage, dummy_array))  # Combine actual with dummy array
 actual_cpu_usage = scaler.inverse_transform(full_input_actual)[:, 0]  # Inverse transform and extract CPU Usage
+# predicted_cpu_usage = scaler.inverse_transform(predicted_cpu_usage)
+# actual_cpu_usage = scaler.inverse_transform(actual_cpu_usage)
 print('predicted_cpu_usage: ', predicted_cpu_usage[:10])
 print('actual_cpu_usage: ', actual_cpu_usage[:10])
 print(f'Test MSE: {test_loss.item()}')
